@@ -1,0 +1,18 @@
+# General
+# Ignore temporary files and system configuration
+*.log                   
+*.tmp                   
+*.swp                   
+
+# Backend
+# Ignore Rust build directory
+backend/target/         
+
+# Frontend
+# Ignore build and distribution directories
+frontend/target/        
+frontend/dist/          
+
+# Others
+# Editor-specific configuration files
+.vscode/                
