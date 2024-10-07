@@ -1,3 +1,9 @@
+use tracing::*;
+
+
 fn main() {
-    println!("Hello World!!");
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::DEBUG) // Capture debug messages
+        .init();
+    debug!("This is a debug message!"); // Log a debug message
 }
