@@ -7,12 +7,13 @@
 
 # Backend
 # Ignore Rust build directory
-backend/target/         
+backend/target/  
+backend/logs/       
 
 # Frontend
 # Ignore build and distribution directories
 frontend/target/        
-frontend/dist/          
+frontend/dist/            
 
 # Others
 # Editor-specific configuration files

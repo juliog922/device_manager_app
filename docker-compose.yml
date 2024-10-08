@@ -1,0 +1,12 @@
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: surrealdb
+    ports:
+      - '8000:8000'
+    command:
+      - start #start the SurrealDB server
+      - --log=trace
+      - --user=root #default user
+      - --pass=root #default password
+    restart: always
