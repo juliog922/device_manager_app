@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+chrono = "0.4.38"
 derive_more = { version = "1.0.0", features = ["from"] }
 dotenv = "0.15.0"
 serde = { version = "1.0.210", features = ["derive"] }
@@ -13,3 +14,4 @@ tokio = { version = "1.40.0", features = ["full"] }
 tracing = "0.1.40"
 tracing-appender = "0.2.3"
 tracing-subscriber = { version = "0.3.18", features = ["json"] }
+uuid = { version = "1.10.0"}

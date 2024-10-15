@@ -1,3 +1,4 @@
+pub mod models;
 pub mod setup;
 
 pub type Result<T> = core::result::Result<T, Error>;

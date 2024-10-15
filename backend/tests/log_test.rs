@@ -1,8 +1,8 @@
 use backend::setup::log_setup::logging_init_setup;
-use tracing::*;
 use std::fs;
-use std::time::Duration;
 use std::thread;
+use std::time::Duration;
+use tracing::*;
 
 /// This test checks whether the logging setup correctly logs the expected messages
 /// into a log file, and ensures that any log files created during the test are
@@ -60,7 +60,7 @@ fn test_log_file() {
 
     // Ensure that log messages are written to the log file by adding a brief sleep.
     // This gives the log system enough time to flush the messages to disk.
-    thread::sleep(Duration::from_secs(1)); 
+    thread::sleep(Duration::from_secs(1));
 
     // Path to the log directory and the file we're testing
     let log_dir = "./logs";
@@ -70,26 +70,33 @@ fn test_log_file() {
     let log_file_path = fs::read_dir(log_dir)
         .expect("Failed to read log directory")
         .filter_map(|entry| entry.ok()) // Ignore invalid entries
-        .find(|entry| entry.file_name().to_string_lossy().contains(log_file_pattern))
+        .find(|entry| {
+            entry
+                .file_name()
+                .to_string_lossy()
+                .contains(log_file_pattern)
+        })
         .expect("Log file not found")
         .path(); // Get the path of the found log file
 
     // Read the content of the log file
-    let log_content = fs::read_to_string(&log_file_path)
-        .expect("Failed to read log file");
+    let log_content = fs::read_to_string(&log_file_path).expect("Failed to read log file");
 
     // Verify that the log file contains the expected log messages in JSON format.
     // These are the log messages that we logged earlier with info!, warn!, and error!.
     assert!(
-        log_content.contains(r#""fields":{"message":"This is an info message!"},"target":"log_test""#),
+        log_content
+            .contains(r#""fields":{"message":"This is an info message!"},"target":"log_test""#),
         "Log file does not contain the expected info message"
     );
     assert!(
-        log_content.contains(r#""fields":{"message":"This is a warning message!"},"target":"log_test""#),
+        log_content
+            .contains(r#""fields":{"message":"This is a warning message!"},"target":"log_test""#),
         "Log file does not contain the expected warning message"
     );
     assert!(
-        log_content.contains(r#""fields":{"message":"This is an error message!"},"target":"log_test""#),
+        log_content
+            .contains(r#""fields":{"message":"This is an error message!"},"target":"log_test""#),
         "Log file does not contain the expected error message"
     );
 }

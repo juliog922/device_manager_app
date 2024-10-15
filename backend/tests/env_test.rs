@@ -1,14 +1,14 @@
 use dotenv::dotenv;
 use std::env;
 
-/// This test verifies that the environment variable "TEST_KEY" is set correctly 
+/// This test verifies that the environment variable "TEST_KEY" is set correctly
 /// and matches the expected value "TEST_VALUE".
-/// 
+///
 /// The `.env` file should include:
 /// ```
 /// TEST_KEY=BACKEND_TEST_VALUE
 /// ```
-/// 
+///
 /// The test loads the `.env` file, retrieves the value of "TEST_KEY",
 /// and compares it with the expected value "TEST_VALUE".
 
