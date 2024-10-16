@@ -25,7 +25,7 @@ pub struct NodeEdgePoint {
 impl NodeEdgePoint {
     /// Create a `NodeEdgePoint` object from a dynamic `Value` (parsed JSON)
     /// Returns `Ok(NodeEdgePoint)` if successful, or an `Err(Error)` if there's an issue
-    pub fn from_value(value: Value) -> Result<Self, Error> {
+    pub fn from_value(value: &Value) -> Result<Self, Error> {
         // Parse the node edge point UUID from the input `Value`
         let node_edge_point_uuid: Uuid = Uuid::parse_str(
             &value

@@ -27,6 +27,7 @@ use uuid::Uuid; // For handling UUIDs (universally unique identifiers)
 /// `node_edge_points` field and other fields are populated correctly.
 #[test]
 fn test_raw_link() {
+    let host = "127.0.0.1";
     // Example of raw JSON data representing a `Link` object
     let raw_link_data = r#"
         {
@@ -67,10 +68,11 @@ fn test_raw_link() {
     // Deserialize raw JSON data into a `Value` type and unwrap safely
     let raw_link_data_value: Value = from_str(&raw_link_data).unwrap_or_default();
     // Attempt to create a `Link` object from the `Value`
-    let raw_link_object = Link::from_value(raw_link_data_value).unwrap();
+    let raw_link_object = Link::from_value(&raw_link_data_value, host).unwrap();
 
     // Manually create a `Link` object with the same data
     let second_link_object: Link = Link {
+        host: host.to_string(),
         node_edge_points: vec![
             NodeEdgePoint {
                 node_edge_point_uuid: Uuid::parse_str("65a39427-3055-3ba4-9e15-0ebed4974577")
@@ -101,6 +103,7 @@ fn test_raw_link() {
 /// error messages are triggered in response.
 #[test]
 fn test_raw_link_error() {
+    let host = "127.0.0.1";
     let raw_link_data = r#"
         {
             "administrative-state": "UNLOCKED",
@@ -139,13 +142,12 @@ fn test_raw_link_error() {
     let raw_link_data_value: Value = from_str(&raw_link_data).unwrap_or_default();
 
     // Check for a custom error when certain required fields are missing
-    match Link::from_value(raw_link_data_value) {
+    match Link::from_value(&raw_link_data_value, host) {
         Err(e) => {
             match e {
                 Error::Custom(msg) => {
                     assert_eq!(msg, "Not found node uuid".to_string());
-                }
-                //_ => panic!("Expected an Error::Custom, but got other kind of error")
+                } //_ => panic!("Expected an Error::Custom, but got other kind of error")
             }
         }
         Ok(_) => panic!("Expected an error, but got Ok"),
@@ -189,13 +191,12 @@ fn test_raw_link_error() {
         }"#;
 
     let raw_link_data_value: Value = from_str(&raw_link_data).unwrap_or_default();
-    match Link::from_value(raw_link_data_value) {
+    match Link::from_value(&raw_link_data_value, host) {
         Err(e) => {
             match e {
                 Error::Custom(msg) => {
                     assert_eq!(msg, "Not found node edge point uuid".to_string());
-                }
-                //_ => panic!("Expected an Error::Custom, but got other kind of error")
+                } //_ => panic!("Expected an Error::Custom, but got other kind of error")
             }
         }
         Ok(_) => panic!("Expected an error, but got Ok"),
@@ -237,13 +238,12 @@ fn test_raw_link_error() {
         }"#;
 
     let raw_link_data_value: Value = from_str(&raw_link_data).unwrap_or_default();
-    match Link::from_value(raw_link_data_value) {
+    match Link::from_value(&raw_link_data_value, host) {
         Err(e) => {
             match e {
                 Error::Custom(msg) => {
                     assert_eq!(msg, "Not found link uuid".to_string());
-                }
-                //_ => panic!("Expected an Error::Custom, but got other kind of error")
+                } //_ => panic!("Expected an Error::Custom, but got other kind of error")
             }
         }
         Ok(_) => panic!("Expected an error, but got Ok"),
@@ -279,13 +279,12 @@ fn test_raw_link_error() {
         }"#;
 
     let raw_link_data_value: Value = from_str(&raw_link_data).unwrap_or_default();
-    match Link::from_value(raw_link_data_value) {
+    match Link::from_value(&raw_link_data_value, host) {
         Err(e) => {
             match e {
                 Error::Custom(msg) => {
                     assert_eq!(msg, "Not found node edge points list".to_string());
-                }
-                //_ => panic!("Expected an Error::Custom, but got other kind of error")
+                } //_ => panic!("Expected an Error::Custom, but got other kind of error")
             }
         }
         Ok(_) => panic!("Expected an error, but got Ok"),
@@ -298,6 +297,7 @@ fn test_raw_link_error() {
 /// and deserialization work as expected. The hash and timestamp are checked for correctness.
 #[test]
 fn test_controlled_link() {
+    let host = "127.0.0.1";
     let link_data = r#"
         {
             "node-edge-point": [
@@ -320,6 +320,7 @@ fn test_controlled_link() {
 
     // Create a `Link` object
     let link_object: Link = Link {
+        host: host.to_string(),
         node_edge_points: vec![
             NodeEdgePoint {
                 node_edge_point_uuid: Uuid::parse_str("65a39427-3055-3ba4-9e15-0ebed4974577")
@@ -343,6 +344,7 @@ fn test_controlled_link() {
     let link_data_formated = format!(
         r#"
     {{
+        "host":"{}",
         "node-edge-point": [
             {{
                 "node-edge-point-uuid": "65a39427-3055-3ba4-9e15-0ebed4974577",
@@ -357,6 +359,7 @@ fn test_controlled_link() {
         "hash":{},
         "date":"{}"
     }}"#,
+        host.to_string(),
         hasher.finish(),
         now.to_rfc3339()
     );

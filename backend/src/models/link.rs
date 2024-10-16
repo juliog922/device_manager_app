@@ -20,6 +20,7 @@ use uuid::Uuid;
 // Define the `Link` struct with relevant fields, and make it serializable, deserializable, and comparable
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Link {
+    pub host: String,
     #[serde(rename(serialize = "node-edge-point", deserialize = "node-edge-point"))]
     // Rename field for (de)serialization
     pub node_edge_points: Vec<NodeEdgePoint>, // A vector of node-edge points
@@ -29,9 +30,18 @@ pub struct Link {
 }
 
 impl Link {
-    /// Create a `Link` object from a dynamic `Value` (parsed JSON)
-    /// Returns `Ok(Link)` if successful, or an `Err(Error)` if there's an issue
-    pub fn from_value(value: Value) -> Result<Self, Error> {
+    /// Creates a Link instance from a JSON `Value` and host
+    ///
+    /// # Arguments
+    /// - `value`: A reference to the JSON `Value` to deserialize from
+    /// - `host`: A reference to the host `static str`
+    ///
+    /// # Returns
+    /// - `Ok(Device)`: If the deserialization is successful
+    /// - `Err(Error)`: If required fields are missing or invalid
+    pub fn from_value(value: &Value, host: &'static str) -> Result<Self, Error> {
+        let host = host.to_string();
+
         // Parse the UUID from the input `Value`
         let uuid: Uuid = Uuid::parse_str(
             &value
@@ -52,7 +62,7 @@ impl Link {
 
         // Iterate over the array of node-edge points and try to parse each into a `NodeEdgePoint`
         for node_edge_point in node_edge_points_array {
-            match NodeEdgePoint::from_value(node_edge_point.clone()) {
+            match NodeEdgePoint::from_value(node_edge_point) {
                 // Clone each `Value` and parse it
                 Ok(ok_node_edge_point) => node_edge_points.push(ok_node_edge_point), // Add to the list if successful
                 Err(err) => {
@@ -71,6 +81,7 @@ impl Link {
 
         // Return a new `Link` object populated with the parsed data
         Ok(Link {
+            host: host,
             node_edge_points: node_edge_points, // Parsed node-edge points
             uuid: uuid,                         // Parsed UUID
             hash: hasher.finish(),              // The calculated hash value
